@@ -1,8 +1,8 @@
 package com.example.bulletinboard.controller;
 
 import com.example.bulletinboard.domain.Users;
+import com.example.bulletinboard.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

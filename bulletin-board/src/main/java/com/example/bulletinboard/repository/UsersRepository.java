@@ -1,4 +1,4 @@
-package com.example.bulletinboard.controller;
+package com.example.bulletinboard.repository;
 
 import com.example.bulletinboard.domain.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
