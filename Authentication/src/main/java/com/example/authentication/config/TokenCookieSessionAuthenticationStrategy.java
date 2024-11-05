@@ -1,6 +1,7 @@
 package com.example.authentication.config;
 
 
+import com.example.authentication.factory.JwtToken;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,17 +15,17 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.function.Function;
-import com.example.authentication.domain.Token;
+
+
 @Setter
 public class TokenCookieSessionAuthenticationStrategy implements SessionAuthenticationStrategy {
 
 
-    private Function<Authentication, Token> tokenCookieFactory;
-    private Function<Token, String> tokenStringSerializer = Objects::toString;
+    private Function<Authentication, JwtToken> tokenCookieFactory;
+    private Function<JwtToken, String> tokenStringSerializer = Objects::toString;
 
 
     @Override
-
     public void onAuthentication(Authentication authentication,
                                  HttpServletRequest request,
                                  HttpServletResponse response)
@@ -38,18 +39,9 @@ public class TokenCookieSessionAuthenticationStrategy implements SessionAuthenti
             cookie.setDomain(null);
             cookie.setSecure(true);
             cookie.setHttpOnly(true);
-            cookie.setMaxAge((int) ChronoUnit.SECONDS.between(Instant.now(), token.expiresAt()));
-
+            cookie.setMaxAge((int) ChronoUnit.SECONDS.between(Instant.now(), token.getExpiresAt()));
             response.addCookie(cookie);
         }
-    }
-
-    public void setTokenCookieFactory(Function<Authentication, Token> tokenCookieFactory) {
-        this.tokenCookieFactory = tokenCookieFactory;
-    }
-
-    public void setTokenStringSerializer(Function<Token, String> tokenStringSerializer) {
-        this.tokenStringSerializer = tokenStringSerializer;
     }
 
 }

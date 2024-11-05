@@ -1,10 +1,12 @@
 package com.example.authentication.config;
 
 
+import com.example.authentication.factory.JwtToken;
 import com.example.authentication.factory.TokenCookieJweStringDeserializer;
+import com.example.authentication.service.TokenService;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,22 +19,28 @@ import org.springframework.security.web.csrf.CsrfFilter;
 
 import java.util.Date;
 import java.util.function.Function;
-import com.example.authentication.domain.Token;
+
 public class TokenCookieAuthenticationConfigurer
     extends AbstractHttpConfigurer<TokenCookieAuthenticationConfigurer, HttpSecurity> {
 
-    private Function<String, Token> tokenCookieStringDeserializer;
+    private Function<String, JwtToken> tokenCookieStringDeserializer;
 
-    private JdbcTemplate jdbcTemplate;
+    private final TokenService tokenService;
+
+
+    public TokenCookieAuthenticationConfigurer(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
+
     @Override
     public void init(HttpSecurity builder) throws Exception {
         builder.logout(logout -> logout.addLogoutHandler(
                         new CookieClearingLogoutHandler("__Host-auth-token"))
                 .addLogoutHandler((request, response, authentication) -> {
                     if (authentication != null &&
-                            authentication.getPrincipal() instanceof Token user) {
-                        this.jdbcTemplate.update("insert into t_deactivated_token (id, c_keep_until) values (?, ?)",
-                                user.getToken().id(), Date.from(user.getToken().expiresAt()));
+                            authentication.getPrincipal() instanceof JwtToken user) {
+                        tokenService.deactivateToken(String.valueOf(user.getId()),
+                                user.getExpiresAt().getEpochSecond());
 
                         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
                     }
@@ -54,7 +62,7 @@ public class TokenCookieAuthenticationConfigurer
 
         var authenticationProvider = new PreAuthenticatedAuthenticationProvider();
         authenticationProvider.setPreAuthenticatedUserDetailsService(
-                new TokenAuthenticationUserDetailsService(this.jdbcTemplate));
+                new TokenAuthenticationUserDetailsService(tokenService));
 
         builder.addFilterAfter(cookieAuthenticationFilter, CsrfFilter.class)
                 .authenticationProvider(authenticationProvider);
@@ -63,12 +71,6 @@ public class TokenCookieAuthenticationConfigurer
     public TokenCookieAuthenticationConfigurer tokenCookieStringDeserializer(
             TokenCookieJweStringDeserializer tokenCookieStringDeserializer) {
         this.tokenCookieStringDeserializer = tokenCookieStringDeserializer;
-        return this;
-    }
-
-    public TokenCookieAuthenticationConfigurer jdbcTemplate(
-            JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
         return this;
     }
 

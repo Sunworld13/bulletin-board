@@ -36,7 +36,7 @@ public class SecurityFilterChain {
                         .sessionAuthenticationStrategy((authentication, request, response) -> {
                         }));
 
-        http.apply(tokenCookieAuthenticationConfigurer);
+        tokenCookieAuthenticationConfigurer.configure(http);
 
         return http.build();
     }

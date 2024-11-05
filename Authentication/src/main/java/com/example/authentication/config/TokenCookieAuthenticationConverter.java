@@ -1,6 +1,7 @@
 package com.example.authentication.config;
 
 
+import com.example.authentication.factory.JwtToken;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationConverter;
@@ -8,12 +9,12 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 
 import java.util.function.Function;
 import java.util.stream.Stream;
-import com.example.authentication.domain.Token;
+
 public class TokenCookieAuthenticationConverter implements AuthenticationConverter {
 
-    private final Function<String, Token> tokenCookieStringDeserializer;
+    private final Function<String, JwtToken> tokenCookieStringDeserializer;
 
-    public TokenCookieAuthenticationConverter(Function<String, Token> tokenCookieStringDeserializer) {
+    public TokenCookieAuthenticationConverter(Function<String, JwtToken> tokenCookieStringDeserializer) {
         this.tokenCookieStringDeserializer = tokenCookieStringDeserializer;
     }
 
