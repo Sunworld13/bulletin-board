@@ -1,6 +1,6 @@
 package chatservice.repository;
 
-import chatservice.domain.Product;
+import chatservice.domain.Advertisement;
 import chatservice.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> getAllByOwner(User owner);
+public interface AdvertisementRepository extends JpaRepository<Advertisement, Long> {
+    List<Advertisement> getAllByOwner(User owner);
 }

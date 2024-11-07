@@ -6,19 +6,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
+
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
+@Setter
 @Entity
 @Table(name = "users")
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String email;
     private String firstName;
     private String lastName;
-    private String email;
-    private String hashPassword;
-    private String phoneNumber;
+    private String password;
+    private String phone;
+
+//    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Advertisement> advertisements;
+
 }

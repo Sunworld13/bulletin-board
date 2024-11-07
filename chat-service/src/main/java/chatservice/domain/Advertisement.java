@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Entity
 @Builder
-public class Product {
+public class Advertisement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,7 +26,7 @@ public class Product {
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    @OneToMany(mappedBy = "product")
-    private List<Question> questions;
+    @OneToMany(mappedBy = "advertisement")
+    private List<Message> messages;
 
 }

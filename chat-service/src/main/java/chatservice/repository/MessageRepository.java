@@ -1,9 +1,9 @@
 package chatservice.repository;
 
-import chatservice.domain.Question;
+import chatservice.domain.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface QuestionRepository extends JpaRepository<Question, Long> {
+public interface MessageRepository extends JpaRepository<Message, Long> {
 }
