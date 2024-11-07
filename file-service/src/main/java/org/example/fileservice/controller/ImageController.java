@@ -12,6 +12,10 @@ import simbirsoft.mgu.ozon.fileservice.dto.FileResponseDto;
 import simbirsoft.mgu.ozon.fileservice.services.ImageService;
 */
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/images")
 @RequiredArgsConstructor
@@ -20,18 +24,19 @@ public class ImageController {
     private final ImageService imageService;
 
     @PostMapping
-    public ResponseEntity<FileResponseDto> upload(MultipartFile file) {
-        return ResponseEntity.ok(imageService.upload(file));
+    public ResponseEntity<List<FileResponseDto>> upload(@RequestParam("files") MultipartFile[] files) {
+        List<FileResponseDto> fileResponseDtos = imageService.upload(files);
+        return ResponseEntity.ok(fileResponseDtos);
     }
-
     @GetMapping("/{_id}")
-    public ResponseEntity<Resource> download(@PathVariable("_id") String _id) {
-        return ResponseEntity.ok(imageService.download(_id));
+    public ResponseEntity<List<Resource>> download(@RequestParam("ids") String[] ids) {
+        return ResponseEntity.ok(imageService.download(ids));
     }
 
     @DeleteMapping("/{_id}")
-    public ResponseEntity<String> delete(@PathVariable("_id") String _id) {
-        return ResponseEntity.ok(imageService.delete(_id));
+    public ResponseEntity<List<String>> delete(@RequestParam("ids") String[] ids) {
+        List<String> responseMessages = imageService.delete(ids);
+        return ResponseEntity.ok(responseMessages);
     }
 
 }
