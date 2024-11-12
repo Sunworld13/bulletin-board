@@ -12,9 +12,11 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class MessageDtoResponse {
-    private String text;
     private Long id;
+    private String text;
     private LocalDateTime sendDate;
-//    private int senderId;
-//    private int recipientId;
+
+    private Long senderId;
+    private Long recipientId;
+    //private Long advertisementId;
 }

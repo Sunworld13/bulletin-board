@@ -1,6 +1,6 @@
 package chatservice.controller;
 
-import chatservice.dto.MessageDtoResponse;
+import chatservice.dto.ExceptionDtoResponse;
 import chatservice.exception.MessageException;
 import chatservice.exception.UserException;
 import org.springframework.http.HttpStatus;
@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ControllerExceptionAdvice {
 
     @ExceptionHandler(MessageException.class)
-    public ResponseEntity<MessageDtoResponse> catchQuestionException(MessageException exception) {
+    public ResponseEntity<ExceptionDtoResponse> catchQuestionException(MessageException exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(
-                        new MessageDtoResponse(exception.getMessage())
+                        new ExceptionDtoResponse(exception.getMessage())
                 );
     }
 
     @ExceptionHandler(UserException.class)
-    public ResponseEntity<MessageDtoResponse> catchUserException(UserException exception) {
+    public ResponseEntity<ExceptionDtoResponse> catchUserException(UserException exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(
-                        new MessageDtoResponse(exception.getMessage())
+                        new ExceptionDtoResponse(exception.getMessage())
                 );
     }
 }

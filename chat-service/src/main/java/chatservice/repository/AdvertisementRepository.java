@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface AdvertisementRepository extends JpaRepository<Advertisement, Long> {
-    List<Advertisement> getAllByOwner(User owner);
+
 }

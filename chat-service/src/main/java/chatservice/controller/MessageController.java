@@ -7,6 +7,8 @@ import chatservice.service.MessageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -25,13 +27,14 @@ public class MessageController {
     }
 
 
-    //получить
+    //получить мои сообщения от какого то отправителя
     @GetMapping("/{recipient-id}/{sender-id}")
-    public ResponseEntity<MessageDtoResponse> getMessages (
+    public ResponseEntity<List<MessageDtoResponse>> getMessages (
         @PathVariable("recipient-id") Long recipientId,
-        @PathVariable("sender-id") Long senderId)
-        {
-            return ResponseEntity.ok(messageService.getMessagesByRecipientId(recipientId, senderId));
-        }
+        @PathVariable("sender-id") Long senderId )
+    {
+        List<MessageDtoResponse> messages = messageService.getMessagesByRecipientId(recipientId, senderId);
+        return ResponseEntity.ok(messages);
+    }
 
 }

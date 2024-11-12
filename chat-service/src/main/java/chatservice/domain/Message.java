@@ -18,15 +18,7 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String text;
-
-    //private Timestamp sendDate;
     private LocalDateTime sendDate;
-
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long senderId;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long recipientId;
-
 
     @ManyToOne
     @JoinColumn(name = "product_id")
