@@ -1,6 +1,6 @@
 package com.example.authentication.factory;
 
-import com.example.authentication.domain.Token;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -8,22 +8,22 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.List;
 
-public class DefaultTokenCookieFactory implements Function<Authentication, Token> {
+public class DefaultTokenCookieFactory implements Function<Authentication, JwtToken> {
 
-    private Duration tokenTtl = Duration.ofDays(1);
+   // private Duration tokenTtl = Duration.ofDays(1);
+    @Value("${jwt.lifetime}")
+    private String tokenTtl;
 
     @Override
-    public Token apply(Authentication authentication) {
+    public JwtToken apply(Authentication authentication) {
         var now = Instant.now();
-        return new Token(UUID.randomUUID(), authentication.getName(),
+        Duration duration = Duration.parse(tokenTtl);
+        return new JwtToken(UUID.randomUUID(),
+                authentication.getName(),
                 authentication.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority).toList(),
-                now, now.plus(this.tokenTtl));
+                now, now.plus(duration));
     }
 
-    public void setTokenTtl(Duration tokenTtl) {
-        this.tokenTtl = tokenTtl;
-    }
 }

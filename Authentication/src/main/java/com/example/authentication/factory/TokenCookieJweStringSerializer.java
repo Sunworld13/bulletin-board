@@ -8,9 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.function.Function;
-import com.example.authentication.domain.Token;
 
-public class TokenCookieJweStringSerializer implements Function<Token, String> {
+public class TokenCookieJweStringSerializer implements Function<JwtToken, String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenCookieJweStringSerializer.class);
 
@@ -31,16 +30,16 @@ public class TokenCookieJweStringSerializer implements Function<Token, String> {
     }
 
     @Override
-    public String apply(Token token) {
+    public String apply(JwtToken token) {
         var jwsHeader = new JWEHeader.Builder(this.jweAlgorithm, this.encryptionMethod)
-                .keyID(token.id().toString())
+                .keyID(token.getId().toString())
                 .build();
         var claimsSet = new JWTClaimsSet.Builder()
-                .jwtID(token.id().toString())
-                .subject(token.subject())
-                .issueTime(Date.from(token.createdAt()))
-                .expirationTime(Date.from(token.expiresAt()))
-                .claim("authorities", token.authorities())
+                .jwtID(token.getId().toString())
+                .subject(token.getSubject())
+                .issueTime(Date.from(token.getCreatedAt()))
+                .expirationTime(Date.from(token.getExpiresAt()))
+                .claim("authorities", token.getAuthorities())
                 .build();
         var encryptedJWT = new EncryptedJWT(jwsHeader, claimsSet);
         try {

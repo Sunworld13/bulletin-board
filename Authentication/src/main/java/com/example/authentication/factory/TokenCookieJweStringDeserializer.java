@@ -1,7 +1,5 @@
 package com.example.authentication.factory;
 
-import com.example.authentication.domain.Token;
-import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jwt.EncryptedJWT;
@@ -12,7 +10,7 @@ import java.text.ParseException;
 import java.util.UUID;
 import java.util.function.Function;
 
-public class TokenCookieJweStringDeserializer implements Function<String, Token> {
+public class TokenCookieJweStringDeserializer implements Function<String, JwtToken> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenCookieJweStringDeserializer.class);
 
@@ -23,12 +21,14 @@ public class TokenCookieJweStringDeserializer implements Function<String, Token>
     }
 
     @Override
-    public Token apply(String string) {
+    public JwtToken apply(String string) {
         try {
             var encryptedJWT = EncryptedJWT.parse(string);
             encryptedJWT.decrypt(this.jweDecrypter);
             var claimsSet = encryptedJWT.getJWTClaimsSet();
-            return new Token(UUID.fromString(claimsSet.getJWTID()), claimsSet.getSubject(),
+            return new JwtToken(
+                    UUID.fromString(claimsSet.getJWTID()),
+                    claimsSet.getSubject(),
                     claimsSet.getStringListClaim("authorities"),
                     claimsSet.getIssueTime().toInstant(),
                     claimsSet.getExpirationTime().toInstant());
